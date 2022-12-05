@@ -5,7 +5,7 @@ class Board:
     def __init__(self, width, height):
         self.width = width
         self.height = height
-        self.board = [[0] * width for _ in range(height)]
+        self.board = [[1] * width for _ in range(height)]
         self.left = 10
         self.top = 10
         self.cell_size = 30
@@ -19,17 +19,20 @@ class Board:
 
     def render(self, screen):
         # создание поля
+        self.screen = screen
         for x in range(self.width):
             for y in range(self.height):
                 pygame.draw.rect(screen, pygame.Color(255, 255, 255), (
                     x * self.cell_size + self.left,
                     y * self.cell_size + self.top,
                     self.cell_size, self.cell_size
-                ), 1)
+                ), self.board[y][x])
 
     def get_click(self, mouse_pos):
         cell = self.get_cell(mouse_pos)
-        self.on_click(cell)
+        print("Была выбрана ячейка:", cell)
+        if cell:
+            self.on_click(cell)
 
     def get_cell(self, mouse_pos):
         x, y = (mouse_pos[0] - self.left) // self.cell_size, \
@@ -39,7 +42,9 @@ class Board:
 
 
     def on_click(self, cell):
-        print("Была выбрана ячейка:", cell)
+        x, y = cell
+        self.board[y][x] = int(not self.board[y][x])
+        self.render(self.screen)
     
 
 def main():
