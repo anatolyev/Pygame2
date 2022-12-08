@@ -22,11 +22,22 @@ class Board:
         self.screen = screen
         for x in range(self.width):
             for y in range(self.height):
+                # Заливаем меньший прямоугольник:
+                pygame.draw.rect(screen, pygame.Color(255, 255, 255), (
+                    x * self.cell_size + self.left + 3,
+                    y * self.cell_size + self.top + 3,
+                    self.cell_size - 6, self.cell_size - 6
+                ), self.board[y][x])
+                # последний board[y][x] устанавливает толщину линий
+                # если 0 то сплошная заливка
+                # Строим сетку:
                 pygame.draw.rect(screen, pygame.Color(255, 255, 255), (
                     x * self.cell_size + self.left,
                     y * self.cell_size + self.top,
                     self.cell_size, self.cell_size
-                ), self.board[y][x])
+                ), 1)
+
+
 
     def get_click(self, mouse_pos):
         cell = self.get_cell(mouse_pos)
@@ -43,6 +54,9 @@ class Board:
 
     def on_click(self, cell):
         x, y = cell
+        # y и x поменены местами, т.к. в списке списков сначала
+        # берется нужная строка, а только потом столбец
+        # а в координатной плоскости наоборот
         self.board[y][x] = int(not self.board[y][x])
         self.render(self.screen)
     
